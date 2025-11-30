@@ -203,27 +203,37 @@ local function drawMarble(xPos, yPos)
 end
 
 local function startSpeedBar()
-    local meterDelay = 0.5
-    local maxSpeed = buttonWidth
-    local value = buttonWidth
+    local meterDelay = 0.01
+    local minWidth = 1
+    local maxWidth = buttonWidth
+    local value = maxWidth
     local direction = -1
-    while true do
-        button.reposition(buttonX, buttonY, value, buttonHeight)
-        wheel.redraw()
-        button.clear()
 
-        --check if clicked again
-        local event, side, x, y = os.pullEventRaw()
-        if event == "monitor_touch" then
-            return value
+    local function animate()
+        while true do
+            button.reposition(buttonX, buttonY, value, buttonHeight)
+            button.setBackgroundColor(colors.green)
+            button.clear()
+            button.setCursorPos(1,1)
+            button.write(string.rep("█", value))
+
+            value = value + direction
+            if value >= maxWidth then direction = -1 end
+            if value <= minWidth then direction = 1 end
+
+            sleep(meterDelay)
         end
-  
-        value = value + direction
-        if value >= maxSpeed then direction = -1 end
-        if value <= 1 then direction = 1 end
-
-        os.sleep(meterDelay)
     end
+
+    local function waitForTouch()
+        while true do
+            local event, side, x, y = os.pullEvent("monitor_touch")
+                return value
+            end
+        end
+    end
+
+    return parallel.waitForAny(animate, waitForTouch)
 end
 
 local function spinWheel(speed)
