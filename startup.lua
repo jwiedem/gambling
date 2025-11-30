@@ -169,15 +169,6 @@ marble = window.create(monitor, marbleX, marbleY, marbleWidth, marbleHeight)
 marble.setBackgroundColor(colors.orange)
 marble.clear() 
 
-
-for i = 1, #rouletteSpaces do
-    local space = rouletteSpaces[i]
-
-    displayCurrentNum(space.digits)
-    drawMarble(space.x, space.y)
-    os.sleep(0.5)
-end
-
 local function displayCurrentNum(digits)
     local firstDigitX = 1
     local secondDigitX = 7
@@ -193,4 +184,12 @@ local function drawMarble(xPos, yPos)
     marble.reposition(xPos, yPos, marbleWidth, marbleHeight)
     board.redraw()
     marble.redraw()
+end
+
+for i = 1, #rouletteSpaces do
+    local space = rouletteSpaces[i]
+
+    displayCurrentNum(space.digits)
+    drawMarble(space.x, space.y)
+    os.sleep(0.5)
 end
