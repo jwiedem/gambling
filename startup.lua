@@ -231,6 +231,9 @@ local function waitForRightClickHold()
     end
 end
 
+initWheel()
+initNum()
+initButton()
 term.write(waitForRightClickHold())
 os.sleep(2)
 
