@@ -151,13 +151,13 @@ paintutils.drawImage(img, 1, 1)
 
 --init number
 local numX = 12
-local numY = 9
+local numY = 10
 local numWidth = 11
 local numHeight = 5
 
-current_num = window.create(monitor, numX, numY, numWidth, numHeight)
-current_num.setBackgroundColor(colors.yellow)
-current_num.clear()
+currentNum = window.create(monitor, numX, numY, numWidth, numHeight)
+currentNum.setBackgroundColor(colors.yellow)
+currentNum.clear()
 
 --init marble
 local marbleX = 4
@@ -169,13 +169,25 @@ marble = window.create(monitor, marbleX, marbleY, marbleWidth, marbleHeight)
 marble.setBackgroundColor(colors.orange)
 marble.clear() 
 
+--init Button
+local buttonX = 12
+local buttonY = 10
+local buttonWidth = 10
+local buttonHeight = 3
+
+button = window.create(monitor, buttonX, buttonY, buttonWidth, buttonHeight)
+button.setBackroundColor(colors.green)
+button.setTextColor(colors.yellow)
+button.write("Spin the Wheel!")
+
 local function displayCurrentNum(digits)
     local firstDigitX = 1
     local secondDigitX = 7
     local digitY = 1
- 
-    current_num.clear()
-    term.redirect(current_num)
+    
+    currentNum.setBackgroundColor(colors.yellow)
+    currentNum.clear()
+    term.redirect(currentNum)
     paintutils.drawImage(digits[1], firstDigitX, digitY)
     paintutils.drawImage(digits[2], secondDigitX, digitY)
 end
@@ -186,10 +198,15 @@ local function drawMarble(xPos, yPos)
     marble.redraw()
 end
 
+while true do
+  local event, side, x, y = os.pullEvent("monitor_touch")
+  
+end
+
 for i = 1, #rouletteSpaces do
     local space = rouletteSpaces[i]
 
-    displayCurrentNum(space.digits)
     drawMarble(space.x, space.y)
-    os.sleep(0.5)
+    displayCurrentNum(space.digits)
+    os.sleep(0.1)
 end
