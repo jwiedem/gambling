@@ -237,7 +237,7 @@ end
 
 local function spinWheel(speed)
     local minDelay = 0.01
-    local maxDelay = 0.25
+    local maxDelay = 0.5
     local spinPower = speed / buttonWidth
     local midDelay = maxDelay - (spinPower * (maxDelay - minDelay))
 
@@ -253,10 +253,11 @@ local function spinWheel(speed)
     local function calcDelay(step, total)
         local ratio = step / total
         if ratio < 0.2 then
-            return maxDelay - (ratio / 0.2) * (maxDelay - midDelay)
+            return minDelay
+        elseif ratio <= 0.8 then
+            return midDelay
         elseif ratio > 0.8 then
-            local r = (ratio - 0.8) / 0.2
-            return midDelay + r * (maxDelay - midDelay)
+            return maxDelay
         else
             return midDelay
         end
