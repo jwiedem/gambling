@@ -242,7 +242,7 @@ local function spinWheel(speed)
     local midDelay = maxDelay - (spinPower * (maxDelay - minDelay))
 
     local baseRotations = 2
-    local extra = math.floor(spinPower * 4)
+    local extra = math.floor(spinPower * 8)
     local totalSteps = (baseRotations + extra) * #rouletteSpaces
 
     -- determine final space
