@@ -208,25 +208,42 @@ local function waitForRightClickHold()
         if x >= buttonX and x < buttonX + buttonWidth and
            y >= buttonY and y < buttonY + buttonHeight then
             local startTime = os.clock()
-   
-            while true do
-                local stillTouch = false
+            local lastPressed = os.clock()
+            while os.clock() - lastPressed < 0.5 do
 
                 local ok, event, side, eventX, eventY = pcall(os.pullEvent, "monitor_touch")
                 if ok and event == "monitor_touch" and 
-                   x >= buttonX and x < buttonX + buttonWidth and
+                   eventX >= buttonX and even < buttonX + buttonWidth and
                    y >= buttonY and y < buttonY + buttonHeight then
-                    stillTouch = true
-                end
-
-                if not stillTouch then
-                    break
+                       lastPressed = os.clock
                 end
             end
 
             local endTime = os.clock()
             local duration = endTime - startTime
             return duration
+        end
+    end
+end
+
+local function waitForButtonHold()
+    while true do
+        local event, side, x, y = os.pullEvent("monitor_touch")
+        if x >= buttonX and x < buttonX + buttonWidth and 
+           y >= buttonY and y < buttonY + buttonHeight then
+            local startTime = os.clock()
+   
+            while true do
+                local ok, e, s, ex, ey = pcall(os.pullEvent, "monitor_touch")
+                if not ok then break end
+                -- if touch is outside button, assume release
+                if ex < buttonX or ex >= buttonX + buttonWidth or
+                   ey < buttonY or ey >= buttonY + buttonHeight then
+                    break
+                end
+            end
+            local endTime = os.clock()
+            return endTime - startTime
         end
     end
 end
