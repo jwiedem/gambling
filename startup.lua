@@ -237,12 +237,12 @@ end
 
 local function spinWheel(speed)
     local minDelay = 0.01
-    local maxDelay = 0.5
+    local maxDelay = 0.3
     local spinPower = speed / buttonWidth
     local midDelay = maxDelay - (spinPower * (maxDelay - minDelay))
 
     local baseRotations = 2
-    local extra = math.floor(spinPower * 4)   -- up to 4 extra spins
+    local extra = math.floor(spinPower * 4)
     local totalSteps = (baseRotations + extra) * #rouletteSpaces
 
     -- determine final space
@@ -255,7 +255,7 @@ local function spinWheel(speed)
         if ratio < 0.2 then
             return minDelay
         elseif ratio <= 0.8 then
-            return midDelay
+            return ratio * midDelay
         elseif ratio > 0.8 then
             return maxDelay
         else
