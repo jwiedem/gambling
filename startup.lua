@@ -234,6 +234,7 @@ end
 initWheel()
 initNum()
 initButton()
+initMarble()
 term.write(waitForRightClickHold())
 
 local function spinWheel()
