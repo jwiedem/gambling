@@ -222,6 +222,15 @@ local function startSpeedBar()
     end
 end
 
+local function spinWheel(speed)
+    for i = 1, #rouletteSpaces do
+        local space = rouletteSpaces[i]
+    
+        drawMarble(space.x, space.y)
+        displayCurrentNum(space.digits)
+        os.sleep(0.1)
+    end
+end
   
 local function waitForButtonPress()
     while true do
@@ -238,14 +247,6 @@ initWheel()
 initNum()
 initButton()
 initMarble()
-term.write(waitForButtonPress())
+waitForButtonPress()
 
-local function spinWheel(speed)
-    for i = 1, #rouletteSpaces do
-        local space = rouletteSpaces[i]
-    
-        drawMarble(space.x, space.y)
-        displayCurrentNum(space.digits)
-        os.sleep(0.1)
-    end
-end
+
