@@ -83,7 +83,7 @@ eeeee
 
 --map spaces to coords
 local rouletteSpaces = {
-    -upper left
+    --upper left
     { index = 0, number = 00, digits = {zero, zero}, x = 4, y = 3 },
  
     --upper row
