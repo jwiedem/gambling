@@ -128,7 +128,7 @@ local rouletteSpaces = {
     { index = 31, number = 2, digits = {zero, two}, x = 4, y = 5 }
 }
 
-
+local wheel, currentNum, marble, button, buttonX, buttonY, buttonWidth, buttonHeight
  
 --init monitor
 local monitor = peripheral.find("monitor")
@@ -143,10 +143,10 @@ local function initWheel()
     local wheelHeight = 18
     
     local img = paintutils.loadImage("wheel_painted.nfp")
-    local board = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
-    board.setBackgroundColour(colors.yellow)
-    board.clear()
-    term.redirect(board)
+    local wheel = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
+    wheel.setBackgroundColour(colors.yellow)
+    wheel.clear()
+    term.redirect(wheel)
     paintutils.drawImage(img, 1, 1)
 end
 
@@ -172,12 +172,12 @@ local function initMarble()
     marble.clear() 
 end
 
-local buttonX = 10
-local buttonY = 16
-local buttonWidth = 15
-local buttonHeight = 1
-
 local function initButton()  
+    local buttonX = 10
+    local buttonY = 16
+    local buttonWidth = 15
+    local buttonHeight = 1
+ 
     button = window.create(monitor, buttonX, buttonY, buttonWidth, buttonHeight)
     button.setBackgroundColor(colors.green)
     button.setTextColor(colors.yellow)
@@ -198,7 +198,7 @@ end
 
 local function drawMarble(xPos, yPos)
     marble.reposition(xPos, yPos, marbleWidth, marbleHeight)
-    board.redraw()
+    wheel.redraw()
     marble.redraw()
 end
 
@@ -235,12 +235,13 @@ initWheel()
 initNum()
 initButton()
 term.write(waitForRightClickHold())
-os.sleep(2)
 
-for i = 1, #rouletteSpaces do
-    local space = rouletteSpaces[i]
-
-    drawMarble(space.x, space.y)
-    displayCurrentNum(space.digits)
-    os.sleep(0.1)
+local function spinWheel()
+    for i = 1, #rouletteSpaces do
+        local space = rouletteSpaces[i]
+    
+        drawMarble(space.x, space.y)
+        displayCurrentNum(space.digits)
+        os.sleep(0.1)
+    end
 end
