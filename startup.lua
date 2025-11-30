@@ -143,7 +143,7 @@ local function initWheel()
     local wheelHeight = 18
     
     local img = paintutils.loadImage("wheel_painted.nfp")
-    local wheel = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
+    wheel = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
     wheel.setBackgroundColour(colors.yellow)
     wheel.clear()
     term.redirect(wheel)
@@ -209,6 +209,7 @@ local function startSpeedBar()
     local direction = -1
     while true do
         button.reposition(buttonX, buttonY, value, buttonHeight)
+        wheel.redraw()
         button.clear()
 
         --check if clicked again
