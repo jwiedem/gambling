@@ -212,22 +212,21 @@ local function startSpeedBar()
     local function animate()
         while true do
             button.reposition(buttonX, buttonY, value, buttonHeight)
-            button.setBackgroundColor(colors.green)
+            wheel.redraw()
             button.clear()
-            button.setCursorPos(1,1)
-            button.write(string.rep("█", value))
-
+   
             value = value + direction
             if value >= maxWidth then direction = -1 end
             if value <= minWidth then direction = 1 end
 
-            sleep(meterDelay)
+            os.sleep(meterDelay)
         end
     end
 
     local function waitForTouch()
         while true do
-            local event, side, x, y = os.pullEvent("monitor_touch")
+            local event, side, x, y = os.pullEvent()
+            if event == "monitor_touch" then
                 return value
             end
         end
