@@ -236,13 +236,47 @@ local function startSpeedBar()
 end
 
 local function spinWheel(speed)
-    for i = 1, #rouletteSpaces do
-        local space = rouletteSpaces[i]
+    local minDelay = 0.01
+    local maxDelay = 0.25
+    local spinPower = speed / buttonWidth
+    local midDelay = maxDelay - (spinPower * (maxDelay - minDelay))
+
+    local baseRotations = 2
+    local extra = math.floor(spinPower * 4)   -- up to 4 extra spins
+    local totalSteps = (baseRotations + extra) * #rouletteSpaces
+
+    -- determine final space
+    local finalOffset = math.random(0, #rouletteSpaces - 1)
+    totalSteps = totalSteps + finalOffset
     
+ 
+    local function calcDelay(step, total)
+        local ratio = step / total
+        if ratio < 0.2 then
+            return maxDelay - (ratio / 0.2) * (maxDelay - midDelay)
+        elseif ratio > 0.8 then
+            local r = (ratio - 0.8) / 0.2
+            return midDelay + r * (maxDelay - midDelay)
+        else
+            return midDelay
+        end
+    end
+
+    local index = 1
+
+    for step = 1, totalSteps do
+        local space = rouletteSpaces[index]
+
         drawMarble(space.x, space.y)
         displayCurrentNum(space.digits)
-        os.sleep(0.1)
+
+        sleep(calcDelay(step, totalSteps))
+
+        index = index + 1
+        if index > #rouletteSpaces then index = 1 end
     end
+
+    return rouletteSpaces[index]
 end
   
 local function waitForButtonPress()
