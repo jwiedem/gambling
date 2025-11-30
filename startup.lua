@@ -173,10 +173,10 @@ local function initMarble()
 end
 
 local function initButton()  
-    local buttonX = 10
-    local buttonY = 16
-    local buttonWidth = 15
-    local buttonHeight = 1
+    buttonX = 10
+    buttonY = 16
+    buttonWidth = 15
+    buttonHeight = 1
  
     button = window.create(monitor, buttonX, buttonY, buttonWidth, buttonHeight)
     button.setBackgroundColor(colors.green)
