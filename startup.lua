@@ -239,6 +239,7 @@ local function waitForButtonPress()
            y >= buttonY and y < buttonY + buttonHeight then
             local speed = startSpeedBar()
             spinWheel(speed)
+        end
     end
 end
 
