@@ -202,27 +202,34 @@ local function drawMarble(xPos, yPos)
     marble.redraw()
 end
 
-local function waitForRightClickHold()
+local function startSpeedBar()
+    local meterDelay = 0.5
+    local maxSpeed = buttonWidth
+    local value = buttonWidth
+    local direction = -1
+    while true do
+        button.reposition(buttonX, buttonY, value, buttonHeight)
+        button.clear()
+        local ok, event, side, x, y = pcall(os.pullEvent, "monitor_touch")
+            if ok and event == "monitor_touch" then
+            return value
+        end
+        value = value + direction
+        if value >= maxSpeed then direction = -1 end
+        if value <= 0 then direction = 1 end
+
+        os.sleep(meterDelay)
+    end
+end
+
+  
+local function waitForButtonPress()
     while true do
         local event, side, x, y = os.pullEvent("monitor_touch")
         if x >= buttonX and x < buttonX + buttonWidth and
            y >= buttonY and y < buttonY + buttonHeight then
-            local startTime = os.clock()
-            local lastPressed = os.clock()
-            while os.clock() - lastPressed < 0.5 do
-
-                local ok, event, side, eventX, eventY = pcall(os.pullEvent, "monitor_touch")
-                if ok and event == "monitor_touch" and 
-                   eventX >= buttonX and eventX < buttonX + buttonWidth and
-                   eventY >= buttonY and eventY < buttonY + buttonHeight then
-                       lastPressed = os.clock
-                end
-            end
-
-            local endTime = os.clock()
-            local duration = endTime - startTime
-            return duration
-        end
+            local speed = startSpeedBar()
+            spinWheel(speed)
     end
 end
 
@@ -231,9 +238,9 @@ initWheel()
 initNum()
 initButton()
 initMarble()
-term.write(waitForRightClickHold())
+term.write(waitForButtonPress())
 
-local function spinWheel()
+local function spinWheel(speed)
     for i = 1, #rouletteSpaces do
         local space = rouletteSpaces[i]
     
