@@ -210,13 +210,16 @@ local function startSpeedBar()
     while true do
         button.reposition(buttonX, buttonY, value, buttonHeight)
         button.clear()
-        local ok, event, side, x, y = pcall(os.pullEvent, "monitor_touch")
-            if ok and event == "monitor_touch" then
+
+        --check if clicked again
+        local event, side, x, y = os.pullEventRaw()
+        if event == "monitor_touch" then
             return value
         end
+  
         value = value + direction
         if value >= maxSpeed then direction = -1 end
-        if value <= 0 then direction = 1 end
+        if value <= 1 then direction = 1 end
 
         os.sleep(meterDelay)
     end
