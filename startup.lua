@@ -136,49 +136,53 @@ monitor.setBackgroundColour(colors.brown)
 monitor.clear()
 monitor.setTextScale(1.5)
 
---init roulette wheel
-local wheelX = 4
-local wheelY = 3
-local wheelWidth = 27
-local wheelHeight = 18
+local function initWheel()
+    local wheelX = 4
+    local wheelY = 3
+    local wheelWidth = 27
+    local wheelHeight = 18
+    
+    local img = paintutils.loadImage("wheel_painted.nfp")
+    local board = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
+    board.setBackgroundColour(colors.yellow)
+    board.clear()
+    term.redirect(board)
+    paintutils.drawImage(img, 1, 1)
+end
 
-local img = paintutils.loadImage("wheel_painted.nfp")
-local board = window.create(monitor, wheelX, wheelY, wheelWidth, wheelHeight)
-board.setBackgroundColour(colors.yellow)
-board.clear()
-term.redirect(board)
-paintutils.drawImage(img, 1, 1)
+local function initNum()
+    local numX = 12
+    local numY = 10
+    local numWidth = 11
+    local numHeight = 5
+    
+    currentNum = window.create(monitor, numX, numY, numWidth, numHeight)
+    currentNum.setBackgroundColor(colors.yellow)
+    currentNum.clear()
+end
 
---init number
-local numX = 12
-local numY = 10
-local numWidth = 11
-local numHeight = 5
+local function initMarble()
+    local marbleX = 4
+    local marbleY = 3
+    local marbleWidth = 3
+    local marbleHeight = 2
 
-currentNum = window.create(monitor, numX, numY, numWidth, numHeight)
-currentNum.setBackgroundColor(colors.yellow)
-currentNum.clear()
+    marble = window.create(monitor, marbleX, marbleY, marbleWidth, marbleHeight)
+    marble.setBackgroundColor(colors.orange)
+    marble.clear() 
+end
 
---init marble
-local marbleX = 4
-local marbleY = 3
-local marbleWidth = 3
-local marbleHeight = 2
-
-marble = window.create(monitor, marbleX, marbleY, marbleWidth, marbleHeight)
-marble.setBackgroundColor(colors.orange)
-marble.clear() 
-
---init Button
-local buttonX = 12
-local buttonY = 10
-local buttonWidth = 10
-local buttonHeight = 3
-
-button = window.create(monitor, buttonX, buttonY, buttonWidth, buttonHeight)
-button.setBackroundColor(colors.green)
-button.setTextColor(colors.yellow)
-button.write("Spin the Wheel!")
+local function initButton()
+    local buttonX = 10
+    local buttonY = 16
+    local buttonWidth = 15
+    local buttonHeight = 1
+    
+    button = window.create(monitor, buttonX, buttonY, buttonWidth, buttonHeight)
+    button.setBackgroundColor(colors.green)
+    button.setTextColor(colors.yellow)
+    button.write("Spin the Wheel!")
+end
 
 local function displayCurrentNum(digits)
     local firstDigitX = 1
@@ -198,10 +202,37 @@ local function drawMarble(xPos, yPos)
     marble.redraw()
 end
 
-while true do
-  local event, side, x, y = os.pullEvent("monitor_touch")
-  
+local function waitForRightClickHold()
+    while true do
+        local event, side, x, y = os.pullEvent("monitor_touch")
+        if x >= buttonX and x < buttonX + buttonWidth and
+           y >= buttonY and y < buttonY + buttonHeight then
+            local startTime = os.clock()
+   
+            while true do
+                local stillTouch = false
+
+                local ok, event, side, eventX, eventY = pcall(os.pullEvent, "monitor_touch")
+                if ok and event == "monitor_touch" and 
+                   x >= buttonX and x < buttonX + buttonWidth and
+                   y >= buttonY and y < buttonY + buttonHeight then
+                    stillTouch = true
+                end
+
+                if not stillTouch then
+                    break
+                end
+            end
+
+            local endTime = os.clock()
+            local duration = endTime - startTime
+            return duration
+        end
+    end
 end
+
+term.write(waitForRightClickHold())
+os.sleep(2)
 
 for i = 1, #rouletteSpaces do
     local space = rouletteSpaces[i]
